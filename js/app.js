@@ -9,7 +9,7 @@ function Horn(title, image_url, description, keyword, horns){
 
 }
 
-Horn.prototype.displayImage= function(){
+Horn.prototype.render= function(){
     var section = $('<section></section>').addClass(`${this.keyword}`);
     var title = `<h2>${this.title}<h2>`;
     var image_url = $('<img></img>').attr('src',`${this.image_url}`);
@@ -17,7 +17,7 @@ Horn.prototype.displayImage= function(){
     section.append(title);
     section.append(image_url);
     section.append(description);
-    $('#imageSection').append(section);
+    $('.imageSection').append(section);
 }
 
 let keyWords=[];
@@ -27,7 +27,43 @@ Horn.prototype.addkey= function(){
     }
 }
 
-function render(){
-
+function render2(){
+ 
+    for(let i=0;i<keyWords.length;i++){
+        $('select').append(`<option class="choice" value="${keyWords[i]} " >${keyWords[i]}</option>`); 
+    }  
 
 }
+
+const ajaxSettings = {
+    method: 'get',
+    dataType: 'json'
+};
+
+$.ajax('data/data.json',ajaxSettings).then((data) =>{
+
+   data.forEach(element => {
+       let horn = new Horn (element.title,element.image_url,element.description,element.keyword,element.horns);
+       horn.render();
+       horn.addkey();
+   });
+
+render2();
+
+
+});
+
+
+$('select').on('change',function(){
+    $('section').hide();
+    console.log(keyWords);
+     let selectedImage = $(this).val();
+     console.log(selectedImage);
+     console.log(keyWords);    
+     $(`.${selectedImage}`).show();
+      
+  
+  
+      
+  });
+
